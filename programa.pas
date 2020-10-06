@@ -1,0 +1,6 @@
+program programateste;
+
+begin
+
+end.
+
