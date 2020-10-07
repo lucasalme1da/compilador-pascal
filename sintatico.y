@@ -74,8 +74,8 @@ expressao3:
   |expressao3 S_MENOR_QUE expressao4 {printf("\n Operacao Relacional <");}
   |expressao3 S_MAIOR_IGUAL_QUE expressao4 {printf("\n Operacao Relacional >=");}
   |expressao3 S_MENOR_IGUAL_QUE expressao4 {printf("\n Operacao Relacional <=");}
-  |expressao3 S_IGUAL expressao4 {printf("\n Operacao Relacional <>");}
-  |expressao3 S_DIFERENTE expressao4 {printf("\n Operacao Relacional =");}
+  |expressao3 S_IGUAL expressao4 {printf("\n Operacao Relacional =");}
+  |expressao3 S_DIFERENTE expressao4 {printf("\n Operacao Relacional <>");}
   |expressao4
 ;
 
