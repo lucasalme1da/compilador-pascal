@@ -5,8 +5,8 @@ int linha = 1;
 %}
 
 %option noyywrap
-%%
 
+%%
  /* OPERADORES ARITMÉTICOS */
 "-"					{return S_SUBT;}
 "+"					{return S_SOMA;}
@@ -45,19 +45,14 @@ else				{return S_ELSE;}
 begin				{return S_BEGIN;}
 end					{return S_END;}
 ":="				{return S_ATRIB;}
-"+"					{return S_MAIS;}
-"*"					{return S_VEZES;}
 ":"					{return S_DOISPONTOS;}
 [a-z][a-z0-9]*		{return S_IDENTIFICADOR;}
 [0-9]+				{return S_INTEIRO;}
 [ \t]				/* ignora */
 [\n]				{linha++;}
 <<EOF>>				{return 0;}
-
-.					{		
-						printf("Erro! Existe um simbolo desconhecido: [%s]\n",yytext);
-						printf("Na linha %d\n",linha);
-						exit(1);
-					}
-
-
+.			{
+			printf("Erro. Símbolo desconhecido: [%s]\n",yytext);
+			printf("Na linha %d\n",linha);
+			exit(1);
+			}

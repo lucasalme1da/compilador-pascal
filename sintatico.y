@@ -1,18 +1,10 @@
- /* (9 mod (5 + 2)) * 7 */
-
 %{
 #include <stdio.h>
 #include "lexico.c"
 void yyerror(const char *msg);
 %}
 
-/* --------------------------------------------------
-   | SÍMBOLOS TERMINAIS DA LINGUAGEM PASCAL SIMPLES |
-   +------------------------------------------------- */
-
-%expect 1			
-
-%start programa /*símbolo inicial da gramática */
+%start programa
 
 %token 			S_SUBT
 %token 			S_SOMA
@@ -50,176 +42,65 @@ void yyerror(const char *msg);
 %token 			S_IDENTIFICADOR
 %token 			S_INTEIRO
 
+
 %%
 
-/* --------------------------------------------
-   | PRODUÇÕES SINTÁTICAS DA LINGUAGEM PASCAL |
-   +------------------------------------------- */
-
 programa:
-	S_PROGRAM S_IDENTIFICADOR S_PONTOVG bloco S_PONTO
+  S_PROGRAM S_IDENTIFICADOR S_PONTOVG bloco S_PONTO
 ;
 
 bloco:
-	corpo
+  corpo
 ;
 
-corpo: 
-	S_BEGIN seq_expressoes S_END
+corpo:
+  S_BEGIN expressao1 S_END
 ;
 
-seq_expressoes:
-	seq_expressoes S_PONTOVG expressao 
-	| expressao
+expressao1:
+  expressao1 S_AND expressao2 {printf("\n Operacao Logica AND");}
+  |expressao1 S_OR expressao2 {printf("\n Operacao Logica OR");}
+  |expressao2
 ;
 
-expressao: 
-	S_PAR_ABRE expressao S_PAR_FECHA
-	| expressao 
+expressao2:
+  expressao2 S_VERDADEIRO expressao3 {printf("\n Operacao V");}
+  |expressao2 S_FALSO expressao3 {printf("\n Operacao F");}
+  |expressao3
 ;
 
-falso_ou_verdadeiro:
-	S_VERDADEIRO
-	| S_FALSO
+expressao3:
+  expressao3 S_MAIOR_QUE expressao4 {printf("\n Operacao Relacional >");}
+  |expressao3 S_MENOR_QUE expressao4 {printf("\n Operacao Relacional <");}
+  |expressao3 S_MAIOR_IGUAL_QUE expressao4 {printf("\n Operacao Relacional >=");}
+  |expressao3 S_MENOR_IGUAL_QUE expressao4 {printf("\n Operacao Relacional <=");}
+  |expressao3 S_IGUAL expressao4 {printf("\n Operacao Relacional <>");}
+  |expressao3 S_DIFERENTE expressao4 {printf("\n Operacao Relacional =");}
+  |expressao4
 ;
 
-multiplicacao_e_divisao:
-	S_INTEIRO S_MULT S_INTEIRO 
-	| S_INTEIRO S_DIVI_REAL S_INTEIRO
-;
-
-soma_e_subtracao: 
-	S_INTEIRO S_MAIS S_INTEIRO 
-	| S_INTEIRO S_SUBT S_INTEIRO
-;
-
-
-operacao_logica: 
-	operacao_relacional S_OR operacao_relacional 
-	| operacao_relacional S_AND operacao_relacional
-	| S_VERDADEIRO | S_FALSO;
-	operacao_relacional S_OR operacao_relacional 
-	| operacao_relacional S_AND operacao_relacional
-	| S_VERDADEIRO | S_FALSO;
-
-
-
-	
-expressao:
-	expressao S_MAIS mult_ou_div
-	| expressao S_MENOS mult_ou_div
-	| mult_ou_div	
-;
-
-mult_ou_div: 
-	mult_ou_div S_MULT maior_menor
-	| mult_ou_div S_DIVI_REAL maior_menor
-	| maior_menor
-;
-
-maior_menor:
-	maior_menor S_MENOR_QUE and_or
-	| maior_menor S_MAIOR_QUE and_or
-	| maior_menor S_MAIOR_IGUAL_QUE and_or
-	| maior_menor S_MENOR_IGUAL_QUE and_or
-	| maior_menor S_IGUAL and_or
-	| maior_menor S_DIFERENTE and_or
-	| and_or
-;
-
-and_or:
-	and_or S_AND parenteses
-	| and_or S_OR parenteses
-	| parenteses
-;
-
-parenteses:
-	parenteses 
-	| S_PAR_ABRE termo S_PAR_FECHA
-	| termo
-	| S_PAR_ABRE
-	| S_PAR_FECHA
+expressao4:
+  expressao4 S_SOMA termo {printf("\n Operacao SOMA");}
+  |expressao4 S_SUBT termo {printf("\n Operacao SUBTRACAO");}  
+  |termo
 ;
 
 termo:
-	S_INTEIRO | boolean
+  termo S_MULT fator {printf("\n Operacao MULTIPLICACAO");}
+  |termo S_DIVI_REAL fator {printf("\n Operacao DIVISAO");}
+  |fator 
+; 
+
+fator:
+  S_IDENTIFICADOR {printf("\n Identificador: %s", yytext);}
+  |S_INTEIRO {printf("\n Numero: %s", yytext);}
+  |S_PAR_ABRE expressao1 S_PAR_FECHA
 ;
-
-boolean:
-	S_VERDADEIRO
-	| S_FALSO
-;
-
-((2+2) * 5) / 4 > 20
-
-/* ====================================== */
-
-expressao:
-	S_PAR_ABRE and_or S_PAR_FECHA
-	| and_or
-;
-
-and_or: 
-	logico AND logico
-	| logico OR logico
-	| logico
-;
-
-logico:
-	mul_div S_MAIOR_QUE mul_div
-	| mul_div S_MENOR_QUE mul_div
-	| mul_div S_MAIOR_IGUAL_QUE mul_div
-	| mul_div S_MENOR_IGUAL_QUE mul_div
-	| mul_div
-;
-
-mul_div:
-	som_sub S_MULT som_sub
-	| som_sub S_DIVI_REAL som_sub
-	| som_sub
-;
-
-som_sub:
-	termo S_SOMA termo
-	| termo S_SUBT termo
-	| termo
-;
-
-termo:
-	S_INTEIRO
-;
-
-
-
-expressao MAIOR_QUE termo
-
-expressao S_DIVI_REAL termo MAIOR_QUE termo
-
-S_PAR_ABRE expressao S_PAR_FECHA S_DIVI_REAL termo MAIOR_QUE termo
-
-S_PAR_ABRE expressao S_MULT termo S_PAR_FECHA S_DIVI_REAL termo MAIOR_QUE termo
-
-S_PAR_ABRE S_PAR_ABRE expressao S_PAR_FECHA  S_MULT termo S_PAR_FECHA S_DIVI_REAL termo MAIOR_QUE termo
-
-S_PAR_ABRE S_PAR_ABRE termo S_SOMA termo S_PAR_FECHA  S_MULT termo S_PAR_FECHA S_DIVI_REAL termo MAIOR_QUE termo
-
-/* ====================================== */
-
-
-9 > 8 + 1
-expressao S_MAIS mult_ou_div
-mult_ou_div S_MAIS maior_menor
-maior_menor S_MAIS  and_or
-maior_menor S_MAIOR_QUE maior_menor S_MAIS parenteses
-and_or S_MAIOR_QUE and_or  S_MAIS termo
-parenteses S_MAIOR_QUE parenteses S_MAIS S_INTEIRO
-termo S_MAIOR_QUE termo S_MAIS S_INTEIRO
-S_INTEIRO S_MAIOR_QUE S_INTEIRO S_MAIS S_INTEIRO
 
 %%
 
 void yyerror(const char *msg){
-	printf("Erro sintatico\n");
+	printf("Erro sintatico!\n");
 }
 
 int main(int argc, char **argv){
@@ -230,7 +111,7 @@ int main(int argc, char **argv){
 
 	yyin = fopen(argv[1],"r");
 	if( !yyparse() ){
-		printf("Compilação terminada. Programa correto.\n");
+		printf("\nCompilação terminada. Programa correto.\n");
 	}
 	else{
 		printf("Erro de compilação\n");
@@ -238,29 +119,6 @@ int main(int argc, char **argv){
 	}
 	fclose(yyin);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
