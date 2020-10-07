@@ -7,7 +7,7 @@ lexsintatico:
 compila:
 	gcc sintatico.c -o compilador.bin
 teste:
-	./compilador.bin < programa.txt
+	./compilador.bin < programa.pas
 apaga:
 	rm -f sintatico.tab.h
 	rm -f sintatico.tab.c
@@ -16,6 +16,3 @@ apaga:
 	rm -f compilador.bin
 	clear
 	ls -l
-
-
-
