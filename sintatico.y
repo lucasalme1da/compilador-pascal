@@ -65,28 +65,22 @@ expressao1:
  
 expressaoNot:
   S_NOT expressaoNot {printf("\n Operacao NOT");}
-  | expressao2
+  |expressao2
   ;
- 
+
 expressao2:
-  expressao2 S_VERDADEIRO expressao3 {printf("\n Operacao V");}
-  |expressao2 S_FALSO expressao3 {printf("\n Operacao F");}
+  expressao2 S_MAIOR_QUE expressao3 {printf("\n Operacao Relacional >");}
+  |expressao2 S_MENOR_QUE expressao3 {printf("\n Operacao Relacional <");}
+  |expressao2 S_MAIOR_IGUAL_QUE expressao3 {printf("\n Operacao Relacional >=");}
+  |expressao2 S_MENOR_IGUAL_QUE expressao3 {printf("\n Operacao Relacional <=");}
+  |expressao2 S_IGUAL expressao3 {printf("\n Operacao Relacional =");}
+  |expressao2 S_DIFERENTE expressao3 {printf("\n Operacao Relacional <>");}
   |expressao3
 ;
 
 expressao3:
-  expressao3 S_MAIOR_QUE expressao4 {printf("\n Operacao Relacional >");}
-  |expressao3 S_MENOR_QUE expressao4 {printf("\n Operacao Relacional <");}
-  |expressao3 S_MAIOR_IGUAL_QUE expressao4 {printf("\n Operacao Relacional >=");}
-  |expressao3 S_MENOR_IGUAL_QUE expressao4 {printf("\n Operacao Relacional <=");}
-  |expressao3 S_IGUAL expressao4 {printf("\n Operacao Relacional =");}
-  |expressao3 S_DIFERENTE expressao4 {printf("\n Operacao Relacional <>");}
-  |expressao4
-;
-
-expressao4:
-  expressao4 S_SOMA termo {printf("\n Operacao SOMA");}
-  |expressao4 S_SUBT termo {printf("\n Operacao SUBTRACAO");}  
+  expressao3 S_SOMA termo {printf("\n Operacao SOMA");}
+  |expressao3 S_SUBT termo {printf("\n Operacao SUBTRACAO");}  
   |termo
 ;
 
@@ -99,6 +93,8 @@ termo:
 fator:
   S_IDENTIFICADOR {printf("\n Identificador: %s", yytext);}
   |S_INTEIRO {printf("\n Numero: %s", yytext);}
+  |S_VERDADEIRO {printf("\n Operando %s", yytext);}
+  |S_FALSO {printf("\n Operando %s", yytext);}
   |S_PAR_ABRE expressao1 S_PAR_FECHA
 ;
 
