@@ -53,16 +53,21 @@ bloco:
   corpo
 ;
 
-corpo:
+corpo:                                                                         
   S_BEGIN expressao1 S_END
 ;
 
 expressao1:
-  expressao1 S_AND expressao2 {printf("\n Operacao Logica AND");}
-  |expressao1 S_OR expressao2 {printf("\n Operacao Logica OR");}
-  |expressao2
+  expressao1 S_AND expressaoNot {printf("\n Operacao Logica AND");}
+  |expressao1 S_OR expressaoNot {printf("\n Operacao Logica OR");}
+  |expressaoNot
 ;
-
+ 
+expressaoNot:
+  S_NOT expressaoNot {printf("\n Operacao NOT");}
+  | expressao2
+  ;
+ 
 expressao2:
   expressao2 S_VERDADEIRO expressao3 {printf("\n Operacao V");}
   |expressao2 S_FALSO expressao3 {printf("\n Operacao F");}
